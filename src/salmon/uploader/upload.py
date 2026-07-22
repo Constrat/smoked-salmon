@@ -430,8 +430,8 @@ def generate_t_description(
     more_info = f"[b]More info:[/b] {more_info_links}\n" if more_info_links else ""
 
     footer = (
-        f"[hr]Uploaded with [url=https://github.com/smokin-salmon/smoked-salmon]"
-        f"[b]smoked-salmon[/b] v{get_version()}[/url]"
+        f"[hr]Uploaded with [url=https://github.com/constrat/smoked-salmon]"
+        f"[b]smoked-salmon[/b] v{get_version()} custom[/url]"
     )
 
     return f"{spectrals}{encode_specifics}{release_date}{tracklist}{lossy_notes}{source}{more_info}{footer}"
