@@ -431,7 +431,7 @@ def generate_t_description(
 
     footer = (
         f"[hr]Uploaded with [url=https://github.com/constrat/smoked-salmon]"
-        f"[b]smoked-salmon[/b] v{get_version()} custom[/url]"
+        f"[b]smoked-salmon[/b] v{get_version()} custom PERSONAL[/url]"
     )
 
     return f"{spectrals}{encode_specifics}{release_date}{tracklist}{lossy_notes}{source}{more_info}{footer}"
