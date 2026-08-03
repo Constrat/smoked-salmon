@@ -8,7 +8,7 @@ import asyncclick as click
 import msgspec
 
 from salmon import cfg
-from salmon.common import handle_scrape_errors, make_searchstrs, re_strip
+from salmon.common import apply_mixed_case_title, handle_scrape_errors, make_searchstrs, re_strip
 from salmon.search import SEARCHSOURCES, run_metasearch
 from salmon.tagger.combine import combine_metadatas
 from salmon.tagger.sources import METASOURCES
@@ -42,7 +42,34 @@ async def get_metadata(path: str, tags: dict[str, Any], rls_data: dict[str, Any]
     metadata, source_url = await _select_choice(choices, rls_data)
     remove_various_artists(metadata["tracks"])
     metadata = fix_hardcore_genre(metadata)
+    metadata = apply_metadata_capitalization(metadata)
     return metadata, source_url
+
+
+def apply_metadata_capitalization(metadata: dict[str, Any]) -> dict[str, Any]:
+    """Apply configurable mixed-case normalization to metadata text fields."""
+    capitalization_cfg = cfg.metadata.capitalization
+
+    if capitalization_cfg.album and metadata.get("title"):
+        metadata["title"] = apply_mixed_case_title(metadata["title"])
+
+    if capitalization_cfg.artists:
+        metadata["artists"] = [
+            (apply_mixed_case_title(artist) or artist, importance) for artist, importance in metadata.get("artists", [])
+        ]
+
+    if capitalization_cfg.tracks or capitalization_cfg.artists:
+        for disc in metadata.get("tracks", {}).values():
+            for track in disc.values():
+                if capitalization_cfg.tracks and track.get("title"):
+                    track["title"] = apply_mixed_case_title(track["title"])
+                if capitalization_cfg.artists:
+                    track["artists"] = [
+                        (apply_mixed_case_title(artist) or artist, importance)
+                        for artist, importance in track.get("artists", [])
+                    ]
+
+    return metadata
 
 
 def _print_search_results(results, rls_data=None):

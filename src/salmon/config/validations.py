@@ -76,12 +76,19 @@ class BeatportSettings(BaseStruct):
     password: str | None = None
 
 
+class MetadataCapitalization(BaseStruct):
+    artists: bool = False
+    album: bool = False
+    tracks: bool = False
+
+
 class Metadata(BaseStruct):
     discogs_token: str | None = None
     qobuz: QobuzSettings = msgspec.field(default_factory=QobuzSettings)
     tidal: TidalSettings = msgspec.field(default_factory=TidalSettings)
     apple_music: AppleMusicSettings = msgspec.field(default_factory=AppleMusicSettings)
     beatport: BeatportSettings = msgspec.field(default_factory=BeatportSettings)
+    capitalization: MetadataCapitalization = msgspec.field(default_factory=MetadataCapitalization)
 
 
 class GazelleTrackerSettings(BaseStruct):

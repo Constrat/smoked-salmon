@@ -23,6 +23,7 @@ from salmon.common.regexes import (
     re_strip,
 )
 from salmon.common.strings import (
+    apply_mixed_case_title,
     fetch_genre,
     less_uppers,
     make_searchstrs,
@@ -42,6 +43,7 @@ __all__ = [
     "parse_copyright",
     "re_split",
     "re_strip",
+    "apply_mixed_case_title",
     "fetch_genre",
     "less_uppers",
     "make_searchstrs",

@@ -62,6 +62,14 @@ imgbb_key = 'api_key'
 # Discogs API Token (from https://www.discogs.com/settings/developers)
 discogs_token = 'discogs-token'
 
+# Optional title casing rules for metadata text fields.
+# Follows standard mixed-case conventions (articles/prepositions/conjunctions lowercased where appropriate).
+# Toggle each field independently.
+# [metadata.capitalization]
+# artists = false
+# album = false
+# tracks = false
+
 # remove if not using tidal (see wiki to see how to get your tidal token)
 [metadata.tidal]
 token = 'your-token'
