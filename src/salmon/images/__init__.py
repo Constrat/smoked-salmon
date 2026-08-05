@@ -7,10 +7,9 @@ import pyperclip
 from salmon import cfg
 from salmon.common import AliasedCommands, commandgroup
 from salmon.errors import ImageUploadFailed
-from salmon.images import catbox, imgbb, imgbox, oeimg, ptpimg, ptscreens, red
+from salmon.images import catbox, imgbb, imgbox, oeimg, ptscreens, red
 
 HOSTS = {
-    "ptpimg": ptpimg,
     "catbox": catbox,
     "ptscreens": ptscreens,
     "oeimg": oeimg,
@@ -172,7 +171,7 @@ async def _handle_failed_spectrals(spectrals, successful) -> dict:
                 fg="magenta",
                 bold=True,
             ),
-            default="ptpimg",
+            default="ptscreens",
         )
         host = host_input.lower()
         if host not in HOSTS:
