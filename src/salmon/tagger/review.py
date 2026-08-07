@@ -379,13 +379,22 @@ async def _edit_comment(metadata):
 
 
 async def _edit_tracks(metadata):
+    def clean_tnum(val):
+        s = re.sub(r"^\d+-", "", str(val))
+        return str(int(s)) if s.isdigit() else s
+
     text_tracks_li = []
+    orig_tracks_flat = [
+        track for disc in metadata["tracks"].values() for track in disc.values()
+    ]
+
     for dnum, disc in metadata["tracks"].items():
         for tnum, track in disc.items():
+            t_clean = clean_tnum(tnum)
             text_tracks_li.append(
-                f"Disc {dnum} Track {tnum}\n"
+                f"Disc {dnum} Track {t_clean}\n"
                 f"Title: {track['title']}\n"
-                f"Artists:\n" + "\n".join(f"> {a} ({i})" for a, i in track["artists"])
+                f"Artists:\n" + "\n".join(f"> {a} ({i})" for a, i in track.get("artists", []))
             )
 
     text_tracks = "\n\n-----\n\n".join(text_tracks_li)
@@ -394,17 +403,23 @@ async def _edit_tracks(metadata):
         if not text_tracks:
             return
         try:
-            tracks_li = [tr for tr in re.split("\n-+\n", text_tracks) if tr.strip()]
-            for track_tx in tracks_li:
+            tracks_li = [tr for tr in re.split(r"\n-+\n", text_tracks) if tr.strip()]
+            new_tracks = defaultdict(dict)
+
+            for idx, track_tx in enumerate(tracks_li):
                 ident, title, _, *artists_li = [t.strip() for t in track_tx.split("\n") if t.strip()]
-                r_ident = re.search(r"Disc ([^ ]+) Track ([^ ]+)", ident)
+                
+                # Extract edited disc and track numbers
+                r_ident = re.search(r"Disc ([^ ]+) Track ([^ ]+)", ident, re.IGNORECASE)
                 if not r_ident:
-                    raise ValueError("Invalid track identifier format")
-                discnum, tracknum = r_ident[1], r_ident[2]
+                    raise ValueError("Invalid track identifier line. Must be 'Disc X Track Y'")
+                
+                discnum = str(int(r_ident[1])) if r_ident[1].isdigit() else r_ident[1]
+                tracknum = clean_tnum(r_ident[2])
+
                 title_match = re.search(r"Title *: *(.+)", title)
                 if not title_match:
                     raise ValueError("Invalid title format")
-                metadata["tracks"][discnum][tracknum]["title"] = title_match[1]
 
                 tuples_artists_list = []
                 for artist_line in artists_li:
@@ -414,10 +429,25 @@ async def _edit_tracks(metadata):
                     if not role_match or not name_match:
                         raise ValueError("Invalid artist format")
                     tuples_artists_list.append((name_match[1], role_match[1].lower()))
-                metadata["tracks"][discnum][tracknum]["artists"] = tuples_artists_list
+
+                track_dict = (
+                    orig_tracks_flat[idx].copy()
+                    if idx < len(orig_tracks_flat)
+                    else {}
+                )
+                
+                # Update track values explicitly
+                track_dict["title"] = title_match[1]
+                track_dict["artists"] = tuples_artists_list
+                track_dict["track#"] = tracknum
+                track_dict["disc#"] = discnum
+
+                new_tracks[discnum][tracknum] = track_dict
+
+            metadata["tracks"] = {d: dict(t) for d, t in new_tracks.items()}
             metadata["artists"], metadata["tracks"] = generate_artists(metadata["tracks"])
             return
-        except (TypeError, ValueError, KeyError) as e:
+        except (TypeError, ValueError, KeyError, IndexError) as e:
             click.confirm(
                 click.style(f"The tracks file is invalid ({type(e)}: {e}), retry?", fg="red"),
                 default=True,

@@ -15,7 +15,7 @@ _BUT_ADVERB_FOLLOWERS = {"a", "an", "few"}
 _SEGMENT_START_PUNCT = "([\"'"
 _SEGMENT_END_PUNCT = ")]\"'"
 _MAJOR_BREAK_CHARS = {":", "?", "!", "-"}
-
+_NUMERIC_SUFFIX_RE = re.compile(r"^(\d+)('?[sS]|st|nd|rd|th)$", re.IGNORECASE)
 
 def apply_mixed_case_title(text: str | None) -> str | None:
     """Apply standard mixed-case title capitalization rules to a string."""
@@ -54,7 +54,7 @@ def apply_mixed_case_title(text: str | None) -> str | None:
         prev_core = prev_word["core"].lower() if prev_word else ""
         next_core = next_word["core"].lower() if next_word else ""
 
-        # The adverbial "but" case ("You Are But a Draft") is title-cased.
+        # Rule 2b: Adverbial "but" ("Life Is But a Dream")
         if (
             lower_core == "but"
             and not force_capitalize
@@ -62,12 +62,24 @@ def apply_mixed_case_title(text: str | None) -> str | None:
             and (next_core in _BUT_ADVERB_FOLLOWERS or not next_core)
         ):
             formatted = "But"
+        # Rule 7: Slang contractions ("Rock 'n' Roll", "Will o' the Wisp")
         elif (
             lower_core in {"n", "o"}
             and not force_capitalize
             and ("'" in word["leading"] or "'" in word["trailing"])
         ):
             formatted = lower_core
+        # Rule 1 & 2b: "so" as an adverb vs conjunction ("Don't Stand So Close to Me")
+        elif lower_core == "so":
+            is_conjunction = (
+                (prev_word and "," in prev_word["trailing"])
+                or next_core == "that"
+            )
+            formatted = "so" if (is_conjunction and not force_capitalize) else "So"
+        # Rule 1 & 2c: "as" as subordinating conjunction/adverb ("This Is As Good As It Gets")
+        elif lower_core == "as":
+            is_preposition = prev_core in {"live", "known", "reincarnated"} and next_core in {"a", "an", "the", "one"}
+            formatted = "as" if (is_preposition and not force_capitalize) else "As"
         else:
             formatted = _format_core(word["core"], force_capitalize)
 
@@ -100,6 +112,11 @@ def _is_segment_end(word: dict[str, str]) -> bool:
 
 
 def _format_core(core: str, force_capitalize: bool) -> str:
+    num_match = _NUMERIC_SUFFIX_RE.match(core)
+    if num_match:
+        digits, suffix = num_match.groups()
+        return f"{digits}{suffix.lower()}"
+
     if _is_acronym(core):
         return core
     if core.lower() in _LOWERCASE_SPECIALS and not force_capitalize:
@@ -116,6 +133,11 @@ def _format_core(core: str, force_capitalize: bool) -> str:
 
 
 def _format_part(part: str, force_capitalize: bool) -> str:
+    num_match = _NUMERIC_SUFFIX_RE.match(part)
+    if num_match:
+        digits, suffix = num_match.groups()
+        return f"{digits}{suffix.lower()}"
+
     if _is_acronym(part):
         return part
 
@@ -131,6 +153,8 @@ def _format_part(part: str, force_capitalize: bool) -> str:
 
 def _is_acronym(token: str) -> bool:
     if len(token) <= 1:
+        return False
+    if _NUMERIC_SUFFIX_RE.match(token):
         return False
     if token.isupper() and re.search(r"[A-Z]", token):
         return True
