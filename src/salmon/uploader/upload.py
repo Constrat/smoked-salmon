@@ -152,7 +152,7 @@ def compile_data_new_group(
         "title": metadata["title"],
         "artists[]": [a[0] for a in metadata["artists"]],
         "importance[]": [ARTIST_IMPORTANCES[a[1]] for a in metadata["artists"]],
-        "year": metadata["group_year"],
+        "year": metadata["year"],
         "record_label": metadata["label"],
         "catalogue_number": generate_catno(metadata),
         "releasetype": gazelle_site.release_types[metadata["rls_type"]],

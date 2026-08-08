@@ -68,7 +68,7 @@ def collect_album_data(metadata):
         for k, v in {
             "album": title,
             "genre": "; ".join(sorted(metadata["genres"])),
-            "date": metadata["group_year"],
+            "date": metadata["year"],
             "label": metadata["label"],
             "catno": metadata["catno"],
             "albumartist": _generate_album_artist(metadata["artists"]),
