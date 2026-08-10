@@ -25,8 +25,10 @@ class Directory(BaseStruct):
 
 
 ImgUploaderLiteral = Literal["ptscreens", "oeimg", "catbox", "imgbb", "imgbox", "red"]
-SpectralSelectionLiteral = Literal["*", "+", "0"]
-
+SpectralSelectionLiteral = Annotated[
+    str,
+    msgspec.Meta(pattern=r"^(\*|\+|0|\d+(\s\d+)*)$")
+]
 
 class ImageUploader(BaseStruct):
     image_uploader: ImgUploaderLiteral = "catbox"
