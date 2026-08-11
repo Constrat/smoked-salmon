@@ -175,14 +175,14 @@ def metadata_validator_base(metadata):
             )
         )
     try:
-        metadata["year"] = int(metadata["year"])
+        metadata["pressing_year"] = int(metadata["pressing_year"])
     except (ValueError, TypeError):
         raise InvalidMetadataError("Year is not an integer.") from None
     if metadata["rls_type"] not in RELEASE_TYPES:
         raise InvalidMetadataError("Invalid release type.")
     if not metadata["genres"]:
         raise InvalidMetadataError("You must specify at least one genre.")
-    if metadata["source"] == "CD" and metadata["year"] < 1982:
+    if metadata["source"] == "CD" and metadata["pressing_year"] < 1982:
         raise InvalidMetadataError("You cannot have a CD upload from before 1982.")
     if metadata["source"] not in SOURCES.values():
         raise InvalidMetadataError(f"{metadata['source']} is not a valid source.")

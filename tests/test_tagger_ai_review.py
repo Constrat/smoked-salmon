@@ -106,8 +106,8 @@ def make_review(**metadata_overrides) -> dict:
     review_metadata = {
         "artists": [{"name": artist_name, "role": artist_role} for artist_name, artist_role in metadata["artists"]],
         "title": metadata["title"],
-        "group_year": metadata["group_year"],
-        "year": metadata["year"],
+        "group_year": metadata["original_year"],
+        "year": metadata["pressing_year"],
         "edition_title": metadata["edition_title"],
         "label": metadata["label"],
         "catno": metadata["catno"],

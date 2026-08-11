@@ -152,12 +152,12 @@ def compile_data_new_group(
         "title": metadata["title"],
         "artists[]": [a[0] for a in metadata["artists"]],
         "importance[]": [ARTIST_IMPORTANCES[a[1]] for a in metadata["artists"]],
-        "year": metadata["group_year"],
+        "year": metadata["original_year"],
         "record_label": metadata["label"],
         "catalogue_number": generate_catno(metadata),
         "releasetype": gazelle_site.release_types[metadata["rls_type"]],
         "remaster": True,
-        "remaster_year": metadata["year"],
+        "remaster_year": metadata["pressing_year"],
         "remaster_title": metadata["edition_title"],
         "remaster_record_label": metadata["label"],
         "remaster_catalogue_number": generate_catno(metadata),
@@ -215,7 +215,7 @@ def compile_data_existing_group(
         "type": 0,
         "groupid": group_id,
         "remaster": True,
-        "remaster_year": metadata["year"],
+        "remaster_year": metadata["pressing_year"],
         "remaster_title": metadata["edition_title"],
         "remaster_record_label": metadata["label"],
         "remaster_catalogue_number": generate_catno(metadata),
@@ -431,7 +431,7 @@ def generate_t_description(
 
     footer = (
         f"[hr]Uploaded with [url=https://github.com/constrat/smoked-salmon]"
-        f"[b]smoked-salmon[/b] v{get_version()} personal fork[/url]"
+        f"[b]smoked-salmon[/b] v{get_version()} constrat's fork[/url]"
     )
 
     return f"{spectrals}{encode_specifics}{release_date}{tracklist}{lossy_notes}{source}{more_info}{footer}"

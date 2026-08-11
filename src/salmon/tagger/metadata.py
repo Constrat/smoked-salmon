@@ -237,8 +237,8 @@ def _print_metadata(metadata, metadata_name="Pending"):
     for artist in metadata["artists"]:
         click.echo(f">>>  {artist[0]} [{artist[1]}]")
     click.echo(f"> TITLE         : {metadata['title']}")
-    click.echo(f"> YEAR : {metadata['group_year']}")
-    click.echo(f"> PRESSING YEAR : {metadata['year']}")
+    click.echo(f"> ORIGINAL YEAR : {metadata["original_year"]}")
+    click.echo(f"> PRESSING YEAR : {metadata["pressing_year"]}")
     click.echo(f"> EDITION TITLE : {metadata['edition_title']}")
     click.echo(f"> LABEL         : {metadata['label']}")
     click.echo(f"> CATNO         : {metadata['catno']}")

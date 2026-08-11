@@ -275,5 +275,5 @@ def generate_conversion_description(url: str, sample_rate: int | None, bit_depth
         f"[b]Source:[/b] {url}\n"
         f"[b]Transcode process:[/b] [code]{sox_cmd}[/code]\n"
         f"[hr]Uploaded with [url=https://github.com/smokin-salmon/smoked-salmon]"
-        f"[b]smoked-salmon[/b] v{get_version()} personal fork[/url]"
+        f"[b]smoked-salmon[/b] v{get_version()} constrat's fork[/url]"
     )

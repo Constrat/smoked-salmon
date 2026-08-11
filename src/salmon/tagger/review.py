@@ -302,18 +302,18 @@ async def _edit_title(metadata):
 
 async def _edit_years(metadata):
     while True:
-        text = f"Year      : {metadata['year']}\nGroup Year: {metadata['group_year']}"
+        text = f"Original Year : {metadata["original_year"]}\nPressing Year : {metadata["pressing_year"]}"
         text = click.edit(text, editor=cfg.upload.default_editor)
         try:
             if not text:
                 return
-            year_line, group_year_line = (line.strip() for line in text.strip().split("\n", 1))
-            year_match = re.match(r"Year *: *(\d{4})", year_line)
-            group_year_match = re.match(r"Group Year *: *(\d{4})", group_year_line)
-            if not year_match or not group_year_match:
+            original_year_line, pressing_year_line = (line.strip() for line in text.strip().split("\n", 1))
+            original_year_match = re.match(r"Original Year *: *(\d{4})", original_year_line)
+            pressing_year_match = re.match(r"Pressing Year *: *(\d{4})", pressing_year_line)
+            if not pressing_year_match or not original_year_match:
                 raise ValueError("Invalid year format")
-            metadata["year"] = year_match[1]
-            metadata["group_year"] = group_year_match[1]
+            metadata["pressing_year"] = pressing_year_match[1]
+            metadata["original_year"] = original_year_match[1]
             return
         except (TypeError, KeyError, ValueError):
             click.confirm(

@@ -54,8 +54,8 @@ def construct_rls_data(
         with contextlib.suppress(ValueError, IndexError, TypeError):
             year_match = re.search(r"(\d{4})", str(tag_track.date))
             if year_match:
-                metadata["year"] = year_match[1]
-        metadata["group_year"] = metadata["year"]
+                metadata["pressing_year"] = year_match[1]
+        metadata["original_year"] = metadata["pressing_year"]
         metadata["upc"] = tag_track.upc
         metadata["label"] = tag_track.label
         metadata["catno"] = tag_track.catno
