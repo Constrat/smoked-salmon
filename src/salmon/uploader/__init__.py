@@ -590,7 +590,7 @@ async def upload(
 
                 if cfg.upload.yes_all or click.confirm(
                     click.style("\nWould you like to check downconversion options?", fg="magenta"),
-                    default=True,
+                    default=False,
                 ):
                     selected_tasks = await prompt_downconversion_choice(rls_data, track_data)
                     if selected_tasks:

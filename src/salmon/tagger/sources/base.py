@@ -45,8 +45,8 @@ class MetadataMixin(ABC):
                     if g.lower() not in [c.lower() for c in cfg.upload.search.blacklisted_genres]
                 ]
             ),
-            "year": self.parse_release_year(soup),
-            "group_year": self.parse_release_group_year(soup),
+            "pressing_year": self.parse_release_year(soup),
+            "original_year": self.parse_release_group_year(soup),
             "date": self.parse_release_date(soup),
             "edition_title": self.parse_edition_title(soup),
             "label": self.parse_release_label(soup),

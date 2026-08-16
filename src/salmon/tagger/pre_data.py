@@ -14,8 +14,8 @@ from salmon.constants import FORMATS, TAG_ENCODINGS
 EMPTY_METADATA = {
     "artists": [],
     "title": None,
-    "group_year": None,
-    "year": None,
+    "original_year": None,
+    "pressing_year": None,
     "date": None,
     "edition_title": None,
     "label": None,

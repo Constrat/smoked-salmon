@@ -103,16 +103,16 @@ def combine_metadatas(*metadatas, base=None, source_url=None):
                 base["cover"] = metadata["cover"]
             if not base["edition_title"]:
                 base["edition_title"] = metadata["edition_title"]
-            if not base["year"]:
-                base["year"] = metadata["year"]
-            if not base["group_year"] or (
-                str(metadata["group_year"]).isdigit() and int(metadata["group_year"]) < int(base["group_year"])
+            if not base["pressing_year"]:
+                base["pressing_year"] = metadata["pressing_year"]
+            if not base["original_year"] or (
+                str(metadata["original_year"]).isdigit() and int(metadata["original_year"]) < int(base["original_year"])
             ):
-                base["group_year"] = metadata["group_year"]
+                base["original_year"] = metadata["original_year"]
             if not base["date"]:
                 base["date"] = metadata["date"]
-                base["year"] = metadata["year"]
-                base["group_year"] = metadata["group_year"]
+                base["pressing_year"] = metadata["pressing_year"]
+                base["original_year"] = metadata["original_year"]
             if not base["rls_type"] or base["rls_type"] == "Album":
                 base["rls_type"] = metadata["rls_type"]
             if not base["upc"]:
